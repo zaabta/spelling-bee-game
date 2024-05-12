@@ -1,95 +1,90 @@
-import Image from "next/image";
-import styles from "./page.module.css";
+'use client'
+import { useState } from 'react'
+import { Controls, Timer, WordList } from '../components'
+import { shuffleArray } from '@/utils'
 
 export default function Home() {
+  const [input, setInput] = useState<string>('')
+  const [seconds, setSeconds] = useState(60)
+  const [data, setData] = useState({
+    words: [
+      'BACK',
+      'BRAD',
+      'CARD',
+      'CRAB',
+      'DARK',
+      'YARD',
+      'DRY',
+      'RACK',
+      'BARKY',
+      'BARDIC',
+      'BRADY',
+      'DARCY',
+      'BABY',
+    ],
+    letters: ['C', 'D', 'K', 'Y', 'B', 'R'],
+    middle: 'A',
+    foundWords: [] as string[],
+  })
+  const handleOnClickShuffle = () => {
+    setData((prev) => ({
+      ...prev,
+      letters: shuffleArray(data.letters),
+    }))
+  }
+  const handleOnClickEnter = () => {
+    const foundWord = data.words.find(
+      (word) => word === input && !data.foundWords.includes(word),
+    )
+    if (foundWord) {
+      setData((prev) => ({
+        ...prev,
+        foundWords: [...prev.foundWords, foundWord],
+      }))
+      setSeconds(60)
+    } else {
+      setInput('')
+    }
+  }
   return (
-    <main className={styles.main}>
-      <div className={styles.description}>
-        <p>
-          Get started by editing&nbsp;
-          <code className={styles.code}>src/app/page.tsx</code>
-        </p>
+    <main className="app">
+      <header>
         <div>
-          <a
-            href="https://vercel.com?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            By{" "}
-            <Image
-              src="/vercel.svg"
-              alt="Vercel Logo"
-              className={styles.vercelLogo}
-              width={100}
-              height={24}
-              priority
-            />
-          </a>
+          <h1>Spelling Bee</h1>
+          <p>Edit by Ali Almanea</p>
         </div>
-      </div>
-
-      <div className={styles.center}>
-        <Image
-          className={styles.logo}
-          src="/next.svg"
-          alt="Next.js Logo"
-          width={180}
-          height={37}
-          priority
+        <h1
+          style={{
+            textAlign: 'end',
+            width: 'fit-content',
+          }}
+        >
+          {data.foundWords.length * 10} Score
+        </h1>
+      </header>
+      <Timer
+        seconds={seconds}
+        setSeconds={setSeconds}
+        onFinish={() => {
+          setData((prev) => ({
+            ...prev,
+            foundWords: [],
+            letters: shuffleArray(prev.letters),
+          }))
+          setSeconds(60)
+        }}
+      />
+      <div className="canvas">
+        <Controls
+          letters={data.letters}
+          middle={data.middle}
+          setInput={setInput}
+          input={input || ''}
+          onCLickShuffle={handleOnClickShuffle}
+          onCLickEnter={handleOnClickEnter}
         />
-      </div>
-
-      <div className={styles.grid}>
-        <a
-          href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className={styles.card}
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2>
-            Docs <span>-&gt;</span>
-          </h2>
-          <p>Find in-depth information about Next.js features and API.</p>
-        </a>
-
-        <a
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className={styles.card}
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2>
-            Learn <span>-&gt;</span>
-          </h2>
-          <p>Learn about Next.js in an interactive course with&nbsp;quizzes!</p>
-        </a>
-
-        <a
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className={styles.card}
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2>
-            Templates <span>-&gt;</span>
-          </h2>
-          <p>Explore starter templates for Next.js.</p>
-        </a>
-
-        <a
-          href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className={styles.card}
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2>
-            Deploy <span>-&gt;</span>
-          </h2>
-          <p>
-            Instantly deploy your Next.js site to a shareable URL with Vercel.
-          </p>
-        </a>
+        <WordList count={data.foundWords.length} words={data.foundWords} />
       </div>
     </main>
-  );
+  )
 }

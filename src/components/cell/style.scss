@@ -1,0 +1,27 @@
+.cell {
+  cursor: pointer;
+  width: 120px;
+  height: 100px;
+  background-color: #e6e6e6;
+  clip-path: polygon(
+    100% 50%,
+    75% 93.3%,
+    25% 93.3%,
+    0% 50%,
+    25% 6.7%,
+    75% 6.7%
+  );
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  &:hover {
+    background-color: #d6d3d3 !important;
+  }
+  .letter {
+    font-weight: 700;
+    font-size: 1.875em;
+    text-anchor: middle;
+    text-transform: uppercase;
+    pointer-events: none;
+  }
+}

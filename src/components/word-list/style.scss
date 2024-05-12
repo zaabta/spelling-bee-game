@@ -1,0 +1,13 @@
+.word-list {
+  border: 1px solid black;
+  width: 100%;
+  padding: 1vw 2vw;
+  ul {
+    padding: 1vw 2vw;
+    overflow-y: scroll;
+    height: 75%;
+    li {
+        padding: .2vw;
+    }
+  }
+}

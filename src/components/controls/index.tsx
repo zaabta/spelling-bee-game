@@ -1,6 +1,7 @@
 import { Dispatch, SetStateAction } from 'react'
 import { Hive, HiveProp } from '../hive'
 import './style.scss'
+import { useParams, usePathname } from 'next/navigation'
 
 type ControlsPros = HiveProp & {
   input?: string
@@ -17,12 +18,13 @@ export const Controls = ({
   onCLickShuffle,
   onCLickEnter,
 }: ControlsPros) => {
+  const path = usePathname()
   return (
     <div className="controls">
       <input
         type="text"
         value={input}
-        placeholder='type or click'
+        placeholder={path === '/en' ? 'type or click' : 'yazın veya tıklayın'}
         onChange={(e) => setInput?.(e.target.value.toUpperCase())}
       />
       <Hive
@@ -33,13 +35,21 @@ export const Controls = ({
         }
       />
       <div className="btns">
-        <input type="button" value={'Clear'} onClick={() => setInput?.('')} />
         <input
           type="button"
-          value={'Shuffle'}
+          value={path === '/en' ? 'Clear' : 'Temizle'}
+          onClick={() => setInput?.('')}
+        />
+        <input
+          type="button"
+          value={path === '/en' ? 'Shuffle' : 'Karıştır'}
           onClick={() => onCLickShuffle?.()}
         />
-        <input type="button" value={'Enter'} onClick={() => onCLickEnter?.()} />
+        <input
+          type="button"
+          value={path === '/en' ? 'Enter' : 'Gir'}
+          onClick={() => onCLickEnter?.()}
+        />
       </div>
     </div>
   )

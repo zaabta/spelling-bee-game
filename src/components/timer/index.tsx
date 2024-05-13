@@ -1,5 +1,6 @@
 'use client'
-import React, { useState, useEffect } from 'react'
+import { usePathname } from 'next/navigation'
+import React, { useEffect } from 'react'
 
 export type TimerProps = {
   onFinish?: () => void
@@ -8,6 +9,8 @@ export type TimerProps = {
 }
 
 export const Timer = ({ onFinish, seconds, setSeconds }: TimerProps) => {
+  const path = usePathname()
+
   useEffect(() => {
     let timer: NodeJS.Timeout | undefined = undefined
 
@@ -29,10 +32,12 @@ export const Timer = ({ onFinish, seconds, setSeconds }: TimerProps) => {
     <div
       style={{
         textAlign: 'end',
-        padding: "1vw"
+        padding: '1vw',
       }}
     >
-      <span>{seconds} seconds left</span>
+      <span>
+        {seconds} {path === '/en' ? 'seconds left' : 'saniye kaldı'}
+      </span>
     </div>
   )
 }
